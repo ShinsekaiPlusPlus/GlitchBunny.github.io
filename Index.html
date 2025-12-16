@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glitch Bunny - Personal CV Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-black: #0a0a0a;
+            --secondary-black: #1a1a1a;
+            --white: #ffffff;
+            --light-gray: #f5f5f5;
+            --medium-gray: #e0e0e0;
+            --accent: #8B5CF6;
+            --accent-hover: #7C3AED;
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 2rem;
+            --spacing-lg: 4rem;
+            --spacing-xl: 8rem;
+            --border-radius: 1px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--primary-black);
+            color: var(--primary-black);
+            line-height: 1.6;
+            font-weight: 400;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: var(--spacing-sm) 0;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .navbar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-black);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .navbar-menu {
+            display: flex;
+            list-style: none;
+            gap: var(--spacing-md);
+        }
+
+        .navbar-link {
+            color: var(--primary-black);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .navbar-link:hover {
+            background-color: var(--light-gray);
+        }
+
+        /* Hero Scroll Section */
+        .hero-scroll-section {
+            
+            min-height: 100vh;
+            display: flex;
+            position: relative;
+            margin-top: 60px;
+            overflow: hidden;
+        }
+
+        .projects-list {
+            position: fixed;
+            left: 0;
+            top: 60px;
+            bottom: 0;
+            width: 300px;
+            background: rgba(255, 255, 255, 0.0);
+            /* backdrop-filter: blur(10px); */
+            /* border-right: 1px solid rgba(224, 224, 224, 0.5); */
+            padding: var(--spacing-lg) var(--spacing-md);
+            overflow-y: auto;
+            z-index: 900;
+        }
+
+        .project-nav-item {
+            padding: var(--spacing-sm);
+            margin-bottom: var(--spacing-sm);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+            background: rgba(255, 255, 255, 0.5); /* Semi-transparent background */
+        }
+
+        .project-nav-item.active {
+            border-left-color: var(--accent);
+            background: rgba(245, 245, 245, 1.0); /* Semi-transparent active state */
+        }
+
+        .project-nav-item:hover {
+            background: rgba(245, 245, 245, 0.8); /* Semi-transparent hover */
+        }
+
+        .project-nav-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+
+        .project-nav-year {
+            font-size: 0.85rem;
+            color: var(--secondary-black);
+        }
+
+        .scroll-content {
+            /* margin-left: 300px; */
+            flex: 1;
+        }
+
+        .scroll-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding: var(--spacing-xl) 0;
+            padding-left: 250px;
+        }
+
+        /* FIXED: Section background to fit screen properly */
+        .section-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .section-bg.active {
+            opacity: 1;
+        }
+
+        /* FIXED: Video elements to fit properly */
+        .section-bg video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .section-bg-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .section-content {
+            position: relative;
+            z-index: 1;
+            color: var(--white);
+            max-width: 600px;
+            padding: var(--spacing-lg);
+            background: rgba(10, 10, 10, 0.8);
+            border-radius: var(--border-radius);
+            backdrop-filter: blur(10px);
+            margin-left: var(--spacing-xl);
+        }
+
+        .section-tag {
+            display: inline-block;
+            background: var(--accent);
+            color: var(--white);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: var(--spacing-md);
+            line-height: 1.1;
+        }
+
+        .section-description {
+            font-size: 1.1rem;
+            margin-bottom: var(--spacing-md);
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-xs);
+            margin-top: var(--spacing-md);
+        }
+
+        .tech-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Projects Showcase Section */
+        .showcase-section {
+            min-height: 100vh;
+            padding: var(--spacing-xl) 0;
+            background: var(--light-gray);
+        }
+
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-lg);
+        }
+
+        .showcase-item {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            border: 1px solid var(--medium-gray);
+            transition: var(--transition);
+        }
+
+        .showcase-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .showcase-video {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            background: var(--primary-black);
+        }
+
+        .showcase-content {
+            padding: var(--spacing-md);
+        }
+
+        .showcase-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-top: var(--spacing-sm);
+        }
+
+        .feature-list li {
+            padding: var(--spacing-xs) 0;
+            position: relative;
+            padding-left: var(--spacing-md);
+        }
+
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .about-section {
+            background: var(--white);
+            padding: var(--spacing-xl) 0;
+        }
+
+        .about-section .section-title {
+            text-align: center;
+            color: var(--primary-black);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .about-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: var(--spacing-xl);
+            align-items: flex-start;
+        }
+
+        .profile-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            border: 1px solid var(--medium-gray);
+            text-align: center;
+            width: 300px;
+            max-width: 100%;
+            transition: var(--transition);
+        }
+
+        .profile-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 auto var(--spacing-md);
+            border: 4px solid var(--light-gray);
+        }
+
+        .profile-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .profile-role {
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        .skill-category h3 {
+            font-size: 1.25rem;
+            margin-bottom: var(--spacing-sm);
+            color: var(--primary-black);
+        }
+
+        .skill-item {
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .skill-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        .skill-bar {
+            height: 6px;
+            background: var(--medium-gray);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .skill-progress {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 3px;
+            transition: width 1s ease;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            padding: var(--spacing-xl) 0;
+            background: var(--light-gray);
+            text-align: center;
+        }
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-lg);
+        }
+
+        .contact-link {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--white);
+            border-radius: var(--border-radius);
+            color: var(--primary-black);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            border: 1px solid var(--medium-gray);
+        }
+
+        .contact-link:hover {
+            background: var(--accent);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .projects-list {
+                width: 250px;
+            }
+            .scroll-content {
+                margin-left: 250px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-scroll-section {
+                flex-direction: column;
+            }
+            
+            .projects-list {
+                position: static;
+                width: 100%;
+                height: auto;
+                max-height: 200px;
+            }
+            
+            .scroll-content {
+                margin-left: 0;
+            }
+            
+            .about-content {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .showcase-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-content {
+                margin-left: 0;
+                margin: 0 var(--spacing-md);
+            }
+        }
+
+        /* Scroll animations */
+        .scroll-animate {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .scroll-animate.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--light-gray);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-content">
+                <a href="#" class="navbar-logo">
+                    <img src="image/Logo.png" alt="Glitch Bunny" style="height: 32px;">
+                    <span>GLITCH BUNNY</span>
+                </a>
+                
+                <ul class="navbar-menu">
+                    <li><a href="#about" class="navbar-link">About</a></li>
+                    <li><a href="#contact" class="navbar-link">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Scroll Section -->
+    <div class="hero-scroll-section">
+        <!-- Projects Navigation -->
+        <div class="projects-list">
+            <div class="project-nav-item active" data-section="0">
+                <div class="project-nav-title">Portals System</div>
+                <div class="project-nav-year">Godot Engine</div>
+            </div>
+            <div class="project-nav-item" data-section="1">
+                <div class="project-nav-title">Gravity System</div>
+                <div class="project-nav-year">Godot Engine</div>
+            </div>
+            <div class="project-nav-item" data-section="2">
+                <div class="project-nav-title">The Stuck</div>
+                <div class="project-nav-year">GMTK 2025</div>
+            </div>
+            <div class="project-nav-item" data-section="3">
+                <div class="project-nav-title">Bunny 404</div>
+                <div class="project-nav-year">Coming 2026</div>
+            </div>
+            <div class="project-nav-item" data-section="4">
+                <div class="project-nav-title">WhiteFox Saturn</div>
+                <div class="project-nav-year">Brackeys 2025.2</div>
+            </div>
+        </div>
+
+        <!-- Scroll Content -->
+        <div class="scroll-content">
+            <!-- Project 1: Portals System -->
+            <section class="scroll-section" id="section-1">
+                <div class="section-bg">
+                    <video autoplay muted loop playsinline>
+                        <source src="image/video2.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="section-content scroll-animate">
+                    <span class="section-tag">Tech Demo</span>
+                    <h2 class="section-title">Portals in Godot</h2>
+                    <p class="section-description">
+                        Custom portal implementation supporting recursive rendering, seamless teleportation, 
+                        and object preservation through portals. Features real-time render texture updates
+                        and physics interaction.
+                    </p>
+                    <p class="section-description">
+                        Supports multiple portals, nested portal views, and maintains object velocity 
+                    </p>
+                </div>
+            </section>
+            
+            <!-- Project 2: Gravity System -->
+            <section class="scroll-section" id="section-2">
+                <div class="section-bg">
+                    <video autoplay muted loop playsinline>
+                        <source src="image/video11.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="section-content scroll-animate">
+                    <span class="section-tag">Tech Demo</span>
+                    <h2 class="section-title">Dynamic Gravity System</h2>
+                    <p class="section-description">
+                        Outer Wilds-inspired gravity system featuring spherical gravity fields, 
+                        multiple gravity sources, and seamless transitions between them.
+                    </p>
+                    <p class="section-description">
+                        Includes orbit mechanics, gravity scaling, and proper character controller 
+                        orientation with smooth rotation transitions.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Project 3: The Stuck -->
+            <section class="scroll-section" id="section-3">
+                <div class="section-bg">
+                    <video autoplay muted loop playsinline>
+                        <source src="image/video6.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="section-content scroll-animate">
+                    <span class="section-tag">Game Jam Project</span>
+                    <h2 class="section-title">The Stuck</h2>
+                    <p class="section-description">
+                        A time-loop based puzzle game where you must save a town from an impending volcano eruption. 
+                        Each loop provides new information and opportunities to change the outcome.
+                    </p>
+                    <p class="section-description">
+                        Developed for GMTK 2025 game jam, featuring dynamic time mechanics, branching narratives, 
+                        and environmental storytelling.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Project 4: Bunny 404 -->
+            <section class="scroll-section" id="section-4">
+                <div class="section-bg">
+                    <video autoplay muted loop playsinline>
+                        <source src="image/video7.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="section-content scroll-animate">
+                    <span class="section-tag">Upcoming Project</span>
+                    <h2 class="section-title">Bunny 404</h2>
+                    <p class="section-description">
+                        Web-Punk style 3D platformer inspired by ENA's surreal aesthetic. Explore glitched 
+                        digital worlds as a bunny trying to fix a corrupted system.
+                    </p>
+                    <p class="section-description">
+                        Featuring reality-bending mechanics, non-euclidean spaces, and a unique visual 
+                        style blending 2D and 3D elements.
+                    </p>
+                </div>
+            </section>
+            <!-- Project 4: WhiteFox Saturn -->
+            <section class="scroll-section" id="section-5">
+                <div class="section-bg">
+                    <video autoplay muted loop playsinline>
+                        <source src="image/video8.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="section-content scroll-animate">
+                    <span class="section-tag">Game Jam Project</span>
+                    <h2 class="section-title">WhiteFox Saturn</h2>
+                    <p class="section-description">
+                        3D platformer inspired by Neon White's fluid movement system. Features stylish combat, 
+                        speedrunning mechanics, and a vibrant cyberpunk aesthetic.
+                    </p>
+                    <p class="section-description">
+                        Created for Brackey's 2025.2 game jam with a focus on responsive controls and 
+                        satisfying movement mechanics.
+                    </p>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- About Us Section -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <h2 class="section-title">About Us</h2>
+            <div class="about-content">
+                <div class="profile-card">
+                    <div class="profile-image">
+                        <img src="image/Face2.png" alt="Ivan Yusov">
+                    </div>
+                    <h3 class="profile-name">Ivan Yusov</h3>
+                    <p class="profile-role">Lead Developer</p>
+                    <p style="margin-bottom: var(--spacing-sm);">
+                        Co-founder of Glitch Bunny.
+                    </p>
+                    <div class="contact-links" style="justify-content: center; margin-top: var(--spacing-md);">
+                        <a href="https://shinsekaiplusplus.itch.io" class="contact-link" style="padding: 8px 16px;">
+                            <i class="fab fa-itch-io"></i>
+                        </a>
+                        <a href="https://github.com/ShinsekaiPlusPlus" class="contact-link" style="padding: 8px 16px;">
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="profile-card">
+                    <div class="profile-image">
+                        <img src="image/Face1.png" alt="Ivan Baranov">
+                    </div>
+                    <h3 class="profile-name">Ivan Baranov</h3>
+                    <p class="profile-role">Lead 3D Generalist</p>
+                    <p style="margin-bottom: var(--spacing-sm);">
+                        Co-founder of Glitch Bunny.
+                    </p>
+                    <div class="contact-links" style="justify-content: center; margin-top: var(--spacing-md);">
+                        <a href="https://pearly4.itch.io" class="contact-link" style="padding: 8px 16px;">
+                            <i class="fab fa-itch-io"></i>
+                        </a>
+                        <a href="https://sketchfab.com/operalix4" class="contact-link" style="padding: 8px 16px;">
+                            <i class="fab fa-sketch"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <h2 class="section-title">Contact Us</h2>
+            <p class="section-subtitle">Looking for collaborations or just want to chat about game development?</p>
+            
+            <div class="contact-links">
+                <a href="https://shinsekaiplusplus.itch.io" class="contact-link">
+                    <i class="fab fa-itch-io"></i>
+                    <span>Itch.io</span>
+                </a>
+                <a href="https://discord.gg/DsJFstx9xX" class="contact-link">
+                    <i class="fab fa-discord"></i>
+                    <span>Discord</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Scroll-based section switching
+        const sections = document.querySelectorAll('.scroll-section');
+        const navItems = document.querySelectorAll('.project-nav-item');
+        const backgrounds = document.querySelectorAll('.section-bg');
+        let currentSection = 0;
+        let isScrolling = false;
+
+        // Intersection Observer for section detection
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !isScrolling) {
+                    const index = Array.from(sections).indexOf(entry.target);
+                    setActiveSection(index);
+                }
+                
+                // Scroll animations
+                if (entry.isIntersecting) {
+                    entry.target.querySelector('.scroll-animate')?.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.5,
+            rootMargin: '-50px 0px -50px 0px'
+        });
+
+        sections.forEach(section => observer.observe(section));
+
+        // Set active section
+        function setActiveSection(index) {
+            // Update nav items
+            navItems.forEach((item, i) => {
+                item.classList.toggle('active', i === index);
+            });
+            
+            // Update backgrounds
+            backgrounds.forEach((bg, i) => {
+                bg.classList.toggle('active', i === index);
+            });
+            
+            currentSection = index;
+        }
+
+        // Nav item click handler
+        navItems.forEach((item, index) => {
+            item.addEventListener('click', () => {
+                isScrolling = true;
+                sections[index].scrollIntoView({ behavior: 'smooth' });
+                
+                setTimeout(() => {
+                    isScrolling = false;
+                }, 1000);
+            });
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowDown' && currentSection < sections.length - 1) {
+                e.preventDefault();
+                sections[currentSection + 1].scrollIntoView({ behavior: 'smooth' });
+            } else if (e.key === 'ArrowUp' && currentSection > 0) {
+                e.preventDefault();
+                sections[currentSection - 1].scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Animate skill bars on scroll
+        const skillObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const skillBars = entry.target.querySelectorAll('.skill-progress');
+                    skillBars.forEach(bar => {
+                        const width = bar.style.width;
+                        bar.style.width = '0';
+                        setTimeout(() => {
+                            bar.style.width = width;
+                        }, 300);
+                    });
+                }
+            });
+        }, { threshold: 0.3 });
+
+        document.querySelectorAll('.skills-grid').forEach(el => skillObserver.observe(el));
+    </script>
+</body>
+</html>
